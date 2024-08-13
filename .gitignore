@@ -132,3 +132,4 @@ dist
 # Added by me
 build
 .vscode/symbols.json
+.env

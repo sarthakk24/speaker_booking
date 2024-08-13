@@ -1,6 +1,6 @@
-import { Sequelize } from "sequelize";
-import config from "../config/config";
-console.log("🔶 New Connection to postgres sql was initialized ");
+import { Sequelize } from 'sequelize';
+import config from '../config/config';
+console.log('🔶 New Connection to postgres sql was initialized ');
 
 const sequelize = new Sequelize(
   config.DB_DATABASE,
@@ -8,7 +8,13 @@ const sequelize = new Sequelize(
   config.DB_PASSWORD,
   {
     host: config.DB_HOST,
-    dialect: "postgres",
+    dialect: 'postgres',
+    dialectOptions: {
+      ssl: {
+        require: true,
+        rejectUnauthorized: false,
+      },
+    },
     port: config.DB_PORT,
     logging: false, // on production logging false
   }
