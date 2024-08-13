@@ -21,9 +21,9 @@
 
 ## Table chart
 
-## Postman Documentaion
+<!-- ## Postman Documentaion -->
 
-<img alt="postgres" src="https://user-images.githubusercontent.com/70757536/209806905-0248e6ca-181e-47f9-89e1-b262a3f970a6.svg" height="60" />https://documenter.getpostman.com/view/11197946/2s8Z6x4EXH
+<!-- <img alt="postgres" src="https://user-images.githubusercontent.com/70757536/209806905-0248e6ca-181e-47f9-89e1-b262a3f970a6.svg" height="60" />https://documenter.getpostman.com/view/11197946/2s8Z6x4EXH -->
 
 ## Installation 🔧
 
