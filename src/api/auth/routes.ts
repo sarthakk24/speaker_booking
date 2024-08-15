@@ -2,7 +2,6 @@ import { Router } from 'express';
 import yupValidator from '../../middlewares/validator';
 import {
   yupLoginSchema,
-  yupObjIdSchema,
   yupSpeakerSignupSchema,
   yupUserSignupSchema,
 } from '../../models/schemas/schema';

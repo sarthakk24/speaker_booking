@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import healthCheckRouter from './healthCheck';
-import userRouter from './users/routes';
+import userRouter from './auth/routes';
 
 export default (): Router => {
   const app = Router();
