@@ -25,7 +25,22 @@ export const yupSpeakerSignupSchema = yup.object().shape({
   expertise: yup.string().required('Please provide Expertise'),
 });
 
-export type SpeakerSignupSchema = yup.InferType<typeof yupUserSignupSchema>;
+export type SpeakerSignupSchema = yup.InferType<typeof yupSpeakerSignupSchema>;
+
+export const yupOtpVerifySchema = yup.object().shape({
+  email: yup.string().email().trim().required('Please provide email id'),
+  role: yup.string().trim().required('Please provide role'),
+  otp: yup.number().required('Please provide otp'),
+});
+
+export type OtpVerifySchema = yup.InferType<typeof yupOtpVerifySchema>;
+
+export const yupOtpGenerateSchema = yup.object().shape({
+  email: yup.string().email().trim().required('Please provide email id'),
+  role: yup.string().trim().required('Please provide role'),
+});
+
+export type OtpGenerateSchema = yup.InferType<typeof yupOtpGenerateSchema>;
 
 export const yupObjIdSchema = yup.object({
   id: yup

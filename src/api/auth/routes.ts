@@ -2,6 +2,8 @@ import { Router } from 'express';
 import yupValidator from '../../middlewares/validator';
 import {
   yupLoginSchema,
+  yupOtpGenerateSchema,
+  yupOtpVerifySchema,
   yupSpeakerSignupSchema,
   yupUserSignupSchema,
 } from '../../models/schemas/schema';
@@ -10,19 +12,29 @@ import {
   handleSignUpSpeaker,
   handleSignUpUser,
 } from './controllers/signup.service';
+import { handleGenerate, handleVerify } from './controllers/otp.service';
+const authRouter = Router();
 
-const userRouter = Router();
-
-userRouter.post('/login', yupValidator('body', yupLoginSchema), handleLogin);
-userRouter.post(
+authRouter.post('/login', yupValidator('body', yupLoginSchema), handleLogin);
+authRouter.post(
   '/signup/user',
   yupValidator('body', yupUserSignupSchema),
   handleSignUpUser
 );
-userRouter.post(
+authRouter.post(
   '/signup/speaker',
   yupValidator('body', yupSpeakerSignupSchema),
   handleSignUpSpeaker
 );
+authRouter.put(
+  '/generate-otp',
+  yupValidator('body', yupOtpGenerateSchema),
+  handleGenerate
+);
 
-export default userRouter;
+authRouter.put(
+  '/verify-otp',
+  yupValidator('body', yupOtpVerifySchema),
+  handleVerify
+);
+export default authRouter;
