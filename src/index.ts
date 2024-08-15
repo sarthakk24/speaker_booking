@@ -12,7 +12,17 @@ async function startServer() {
   Loaders({ app });
 
   User.hasMany(Booking);
-  Speaker.hasMany(Booking);
+
+  Speaker.hasMany(Booking, {
+    as: 'Bookings',
+    foreignKey: 'speaker_id',
+  });
+
+  Booking.belongsTo(Speaker, {
+    as: 'Speaker',
+    foreignKey: 'speaker_id',
+  });
+
   sequelize.sync();
 
   app
