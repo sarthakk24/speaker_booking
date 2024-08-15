@@ -20,7 +20,7 @@ export const handleUpdateBooking = async (
 
     res.status(200).json({
       success: true,
-      message: 'Expertise updated successful',
+      message: 'Booking updated successful',
     });
     next();
   } catch (err: any) {

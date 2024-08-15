@@ -20,7 +20,7 @@ export const handleDeleteBooking = async (
 
     res.status(200).json({
       success: true,
-      message: 'Expertise updated successful',
+      message: 'Booking deleted successful',
     });
     next();
   } catch (err: any) {
