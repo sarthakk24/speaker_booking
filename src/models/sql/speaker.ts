@@ -1,7 +1,7 @@
 import { DataTypes } from 'sequelize';
 import sequelize from '../../loaders/database';
 
-const User = sequelize.define('User', {
+const Speaker = sequelize.define('Speakers', {
   id: {
     type: DataTypes.UUID,
     defaultValue: DataTypes.UUIDV4,
@@ -30,6 +30,13 @@ const User = sequelize.define('User', {
     allowNull: false,
     defaultValue: false,
   },
+  price_per_session: {
+    type: DataTypes.FLOAT,
+    allowNull: true,
+  },
+  expertise: {
+    type: DataTypes.TEXT,
+  },
   _deleted: {
     type: DataTypes.BOOLEAN,
     allowNull: false,
@@ -37,4 +44,4 @@ const User = sequelize.define('User', {
   },
 });
 
-export default User;
+export default Speaker;

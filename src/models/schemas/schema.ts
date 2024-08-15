@@ -1,19 +1,31 @@
 import * as yup from 'yup';
 export const yupLoginSchema = yup.object({
-  email: yup.string().required().trim(),
-  password: yup.string().required().trim(),
+  email: yup.string().required('Email is required').trim(),
+  password: yup.string().required('Password is required').trim(),
+  role: yup.string().trim().required('Role is required'),
 });
 
 export type LoginSchema = yup.InferType<typeof yupLoginSchema>;
 
-export const yupSignupSchema = yup.object().shape({
-  first_name: yup.string().trim().required('please provide first name'),
-  last_name: yup.string().trim().required('please provide last name'),
-  email: yup.string().email().trim().required('please provide email id'),
-  password: yup.string().trim().required('please provide last name'),
+export const yupUserSignupSchema = yup.object().shape({
+  first_name: yup.string().trim().required('Please provide first name'),
+  last_name: yup.string().trim().required('Please provide last name'),
+  email: yup.string().email().trim().required('Please provide email id'),
+  password: yup.string().trim().required('Please provide last name'),
 });
 
-export type SignupSchema = yup.InferType<typeof yupSignupSchema>;
+export type UserSignupSchema = yup.InferType<typeof yupUserSignupSchema>;
+
+export const yupSpeakerSignupSchema = yup.object().shape({
+  first_name: yup.string().trim().required('Please provide first name'),
+  last_name: yup.string().trim().required('Please provide last name'),
+  email: yup.string().email().trim().required('Please provide email id'),
+  password: yup.string().trim().required('Please provide last name'),
+  price_per_session: yup.number().required('Please provide price per session'),
+  expertise: yup.string().required('Please provide Expertise'),
+});
+
+export type SpeakerSignupSchema = yup.InferType<typeof yupUserSignupSchema>;
 
 export const yupObjIdSchema = yup.object({
   id: yup

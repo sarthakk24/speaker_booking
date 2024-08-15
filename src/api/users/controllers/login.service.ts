@@ -1,15 +1,23 @@
 import { NextFunction, Request, Response } from 'express';
-import User from '../../../models/sql/user';
 import * as bcrypt from 'bcrypt';
-import { sign, JwtPayload } from 'jsonwebtoken';
+import { sign } from 'jsonwebtoken';
 import config from '../../../config/config';
+import User from '../../../models/sql/user';
+import Speaker from '../../../models/sql/speaker';
 
-const signinUser = async (email: string, password: string) => {
-  const userExists = await User.findOne({
-    where: {
-      email,
-    },
-  });
+const signinUser = async (email: string, password: string, role: string) => {
+  const userExists =
+    role == 'user'
+      ? await User.findOne({
+          where: {
+            email,
+          },
+        })
+      : await Speaker.findOne({
+          where: {
+            email,
+          },
+        });
 
   if (!userExists) {
     throw {
@@ -46,8 +54,8 @@ export const handleLogin = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const { email, password } = req.body;
-    const resData = await signinUser(email, password);
+    const { email, password, role } = req.body;
+    const resData = await signinUser(email, password, role);
     res.status(200).json({
       success: true,
       message: 'Login successful',
