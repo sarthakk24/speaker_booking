@@ -15,6 +15,7 @@ import {
 import { handleGenerate, handleVerify } from './controllers/otp.service';
 const authRouter = Router();
 
+// Post
 authRouter.post('/login', yupValidator('body', yupLoginSchema), handleLogin);
 authRouter.post(
   '/signup/user',
@@ -26,6 +27,8 @@ authRouter.post(
   yupValidator('body', yupSpeakerSignupSchema),
   handleSignUpSpeaker
 );
+
+// Put
 authRouter.put(
   '/generate-otp',
   yupValidator('body', yupOtpGenerateSchema),
