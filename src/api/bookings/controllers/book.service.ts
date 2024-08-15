@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from 'express';
-import Speaker from '../../../models/sql/speaker';
 
 export const handleNewBooking = async (
   req: Request,
@@ -7,16 +6,7 @@ export const handleNewBooking = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const { email, expertise } = req.body;
-
-    const result = await Speaker.update(
-      { expertise },
-      {
-        where: { email },
-      }
-    );
-
-    console.log(result);
+    const { speaker_id, speaker_email, time_slot, date } = req.body;
 
     res.status(200).json({
       success: true,

@@ -7,17 +7,7 @@ export const handleUpdateBooking = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const { email, expertise } = req.body;
-
-    const result = await Speaker.update(
-      { expertise },
-      {
-        where: { email },
-      }
-    );
-
-    console.log(result);
-
+    const { speaker_id, speaker_email, time_slot, date } = req.body;
     res.status(200).json({
       success: true,
       message: 'Booking updated successful',
