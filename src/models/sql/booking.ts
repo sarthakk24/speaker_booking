@@ -1,4 +1,4 @@
-import { DataTypes, Model, Sequelize, Optional } from 'sequelize';
+import { DataTypes } from 'sequelize';
 import sequelize from '../../loaders/database';
 
 const Booking = sequelize.define(
