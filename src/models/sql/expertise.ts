@@ -4,7 +4,7 @@ import sequelize from '../../loaders/database';
 const Expert = sequelize.define('expertise', {
   id: {
     type: DataTypes.UUID,
-    defaultValue: DataTypes.UUIDV4,
+    defaultValue: DataTypes.UUID,
     allowNull: false,
     primaryKey: true,
   },
