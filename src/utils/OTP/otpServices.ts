@@ -7,16 +7,23 @@ export const generateOtp = () => {
 
 export const storeOtp = async (userId: string): Promise<string> => {
   const otp = generateOtp();
-  await client.setEx(`otp:${userId}`, 300, otp);
+  const result = await client.setEx(`otp:${userId}`, 300, otp);
+  console.log(result, userId);
+
+  console.log(otp);
+
   return otp;
 };
 
-export async function verifyOtp(userId: string, otp: string): Promise<boolean> {
+export const verifyOtp = async (
+  userId: string,
+  otp: number
+): Promise<boolean> => {
   const storedOtp = await client.get(`otp:${userId}`);
-  if (storedOtp === otp) {
+  if (Number(storedOtp) === otp) {
     await client.del(`otp:${userId}`);
     return true;
   } else {
     return false;
   }
-}
+};

@@ -28,14 +28,13 @@ authRouter.post(
   handleSignUpSpeaker
 );
 
-// Put
-authRouter.put(
+authRouter.post(
   '/generate-otp',
   yupValidator('body', yupOtpGenerateSchema),
   handleGenerate
 );
 
-authRouter.put(
+authRouter.post(
   '/verify-otp',
   yupValidator('body', yupOtpVerifySchema),
   handleVerify

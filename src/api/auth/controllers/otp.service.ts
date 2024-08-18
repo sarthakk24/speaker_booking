@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import Speaker from '../../../models/sql/speaker';
 import User from '../../../models/sql/user';
 import { sendEmail, createNodemailerMail } from '../../../utils/mailer/ses';
-import { generateOtp } from '../../../utils/OTP/otpServices';
+import { storeOtp, verifyOtp } from '../../../utils/OTP/otpServices';
 
 export const handleGenerate = async (
   req: Request,
@@ -11,7 +11,32 @@ export const handleGenerate = async (
 ): Promise<void> => {
   try {
     const { email, role } = req.body;
-    const otp = generateOtp();
+
+    let user;
+
+    if (role == 'speaker') {
+      user = await Speaker.findOne({
+        where: { email },
+      });
+    } else {
+      user = await User.findOne({
+        where: { email },
+      });
+    }
+
+    if (!user) {
+      throw {
+        message: `No user found with this mail : ${email}`,
+      };
+    }
+
+    if (user.dataValues.email_verification) {
+      throw {
+        message: `User mail : ${email} is already verified`,
+      };
+    }
+
+    const otp = await storeOtp(user.dataValues.id);
 
     const emailHTML = `
   <h1>Email Verification</h1>
@@ -49,25 +74,46 @@ export const handleVerify = async (
   try {
     const { email, otp, role } = req.body;
 
+    let user;
+
     if (role == 'speaker') {
-      const result = await Speaker.update(
-        { email_verification: true },
-        {
-          where: { email },
-        }
-      );
-
-      console.log(result);
+      user = await Speaker.findOne({
+        where: { email },
+      });
     } else {
-      const result = await User.update(
-        { email_verification: true },
-        {
-          where: { email },
-        }
-      );
-
-      console.log(result);
+      user = await User.findOne({
+        where: { email },
+      });
     }
+
+    if (!user) {
+      throw {
+        success: true,
+        message: `No user found with mail ${email}`,
+      };
+    }
+
+    const otpVerification = await verifyOtp(user.dataValues.id, otp);
+
+    if (!otpVerification) {
+      throw {
+        success: false,
+        message: 'Otp verification failed.',
+      };
+    }
+
+    if (role == 'speaker') {
+      await Speaker.update(
+        { email_verification: true },
+        { where: { id: user.dataValues.id } }
+      );
+    } else {
+      await User.update(
+        { email_verification: true },
+        { where: { id: user.dataValues.id } }
+      );
+    }
+
     res.status(200).json({
       success: true,
       message: 'Otp verified successful',
