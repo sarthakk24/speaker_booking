@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import Speaker from '../../../models/sql/speaker';
 import User from '../../../models/sql/user';
 import { sendEmail, createNodemailerMail } from '../../../utils/mailer/ses';
-import { generateOTP } from '../../../utils/OTP/generateOtp';
+import { generateOtp } from '../../../utils/OTP/otpServices';
 
 export const handleGenerate = async (
   req: Request,
@@ -11,8 +11,7 @@ export const handleGenerate = async (
 ): Promise<void> => {
   try {
     const { email, role } = req.body;
-
-    const otp = generateOTP();
+    const otp = generateOtp();
 
     const emailHTML = `
   <h1>Email Verification</h1>
