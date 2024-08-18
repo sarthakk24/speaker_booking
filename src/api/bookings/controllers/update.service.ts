@@ -29,6 +29,13 @@ export const handleUpdateBooking = async (
       };
     }
 
+    if (!req.user?.verified) {
+      throw {
+        success: false,
+        message: `${req.user?.email} is not verified.`,
+      };
+    }
+
     const [year, month, day] = date.split('-').map(Number);
     const [hours, minutes] = time_slot.split(':').map(Number);
 

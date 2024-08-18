@@ -24,6 +24,14 @@ export const handleUpdateExpertise = async (
       };
     }
 
+    if (!req.user?.verified) {
+      throw {
+        status: 401,
+        message: `${req.user?.email} is not verified.`,
+        data: email,
+      };
+    }
+
     const result = await Speaker.update(
       { expertise },
       {

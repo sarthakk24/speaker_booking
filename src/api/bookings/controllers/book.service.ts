@@ -25,6 +25,13 @@ export const handleNewBooking = async (
 
     const { id, email } = userDetails.dataValues;
 
+    if (!req.user?.verified) {
+      throw {
+        success: false,
+        message: `${req.user?.email} is not verified.`,
+      };
+    }
+
     // Combine date and time to create a new Date object
     const [year, month, day] = date.split('-').map(Number);
     const [hours, minutes] = time_slot.split(':').map(Number);

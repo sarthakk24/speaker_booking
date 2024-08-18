@@ -28,6 +28,13 @@ export const handleDeleteBooking = async (
       };
     }
 
+    if (!req.user?.verified) {
+      throw {
+        success: false,
+        message: `${req.user?.email} is not verified.`,
+      };
+    }
+
     const result = await Booking.destroy({
       where: { id: bookingId },
     });
