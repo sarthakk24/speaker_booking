@@ -17,4 +17,7 @@ export default {
   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY ?? 'test',
   from: process.env.EMAIL_FROM ?? 'sarthak.sachdeva.73@gmail.com',
   replyTo: process.env.EMAIL_REPLY_TO ?? 'sarthak.sachdeva.73@gmail.com',
+  redisPassword: process.env.REDIS_PASSWORD ?? '',
+  redisHost: process.env.REDIS_HOST ?? '',
+  redisPort: process.env.REDIS_PORT ?? '5000',
 };
