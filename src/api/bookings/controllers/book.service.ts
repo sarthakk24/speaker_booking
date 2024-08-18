@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import Booking from '../../../models/sql/booking';
+import User from '../../../models/sql/user';
 
 export const handleNewBooking = async (
   req: Request,
@@ -9,8 +10,20 @@ export const handleNewBooking = async (
   try {
     const { speaker_id, speaker_email, time_slot, date } = req.body;
 
-    const user_id = '02c4ee1c-675c-4a7e-a1be-7633b689dc2f';
-    const user_email = 'sarthaksachdevasocial@gmail.com';
+    const userDetails = await User.findOne({
+      where: {
+        email: req.user?.email,
+      },
+    });
+
+    if (!userDetails) {
+      throw {
+        success: false,
+        message: 'user not found',
+      };
+    }
+
+    const { id, email } = userDetails.dataValues;
 
     // Combine date and time to create a new Date object
     const [year, month, day] = date.split('-').map(Number);
@@ -45,8 +58,8 @@ export const handleNewBooking = async (
     }
 
     await Booking.create({
-      user_id,
-      user_email,
+      user_id: id,
+      user_email: email,
       speaker_id,
       speaker_email,
       time_slot: dateTimeIST,

@@ -9,14 +9,16 @@ import {
   yupObjIdSchema,
   yupUpdateBookingSchema,
 } from '../../models/schemas/schema';
+import { validateUser } from '../../middlewares/verifyJWT';
 const bookingRouter = Router();
 
 // Get
-bookingRouter.get('/', handleGetBooking);
+bookingRouter.get('/', validateUser, handleGetBooking);
 
 // Post
 bookingRouter.post(
   '/new',
+  validateUser,
   yupValidator('body', yupNewBookingSchema),
   handleNewBooking
 );
@@ -24,6 +26,7 @@ bookingRouter.post(
 // Put
 bookingRouter.put(
   '/update/:id',
+  validateUser,
   yupValidator('params', yupObjIdSchema),
   yupValidator('body', yupUpdateBookingSchema),
   handleUpdateBooking
@@ -32,6 +35,7 @@ bookingRouter.put(
 // Delete
 bookingRouter.delete(
   '/delete/:id',
+  validateUser,
   yupValidator('params', yupObjIdSchema),
   handleDeleteBooking
 );

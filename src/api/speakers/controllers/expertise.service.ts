@@ -7,7 +7,22 @@ export const handleUpdateExpertise = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const { email, expertise } = req.body;
+    const { expertise } = req.body;
+    const email = req.user?.email;
+
+    const speakerExists = await Speaker.findAll({
+      where: {
+        email,
+      },
+    });
+
+    if (!speakerExists) {
+      throw {
+        status: 404,
+        message: 'no speaker found',
+        data: email,
+      };
+    }
 
     const result = await Speaker.update(
       { expertise },

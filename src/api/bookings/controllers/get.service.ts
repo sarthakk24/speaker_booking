@@ -38,14 +38,16 @@ export const handleGetBooking = async (
   next: NextFunction
 ): Promise<void> => {
   try {
+    console.log(req.user);
+
     const today = new Date();
     today.setHours(0, 0, 0, 0); // Set to midnight for comparison
 
     const tomorrow = new Date(today);
-    tomorrow.setDate(today.getDate() + 1);
+    tomorrow.setDate(today.getDate() + 2);
 
     const dayAfterTomorrow = new Date(today);
-    dayAfterTomorrow.setDate(today.getDate() + 2);
+    dayAfterTomorrow.setDate(today.getDate() + 3);
 
     // Define the time slots range
     const timeSlots: string[] = [

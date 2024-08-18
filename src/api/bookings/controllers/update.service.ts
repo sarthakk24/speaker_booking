@@ -22,6 +22,13 @@ export const handleUpdateBooking = async (
       return;
     }
 
+    if (existingBooking.dataValues.user_email != req.user?.email) {
+      throw {
+        statusCode: 401,
+        message: `${req.user?.email} are not authorized to update this booking`,
+      };
+    }
+
     const [year, month, day] = date.split('-').map(Number);
     const [hours, minutes] = time_slot.split(':').map(Number);
 
@@ -39,7 +46,7 @@ export const handleUpdateBooking = async (
         speaker_id: existingBooking.dataValues.speaker_id,
         time_slot: newDateTimeIST,
         date,
-        id: { [Op.ne]: booking_id }, // Exclude the current booking
+        id: { [Op.ne]: booking_id },
       },
     });
 
@@ -52,7 +59,6 @@ export const handleUpdateBooking = async (
       return;
     }
 
-    // Update the booking
     await Booking.update(
       { time_slot: newDateTimeIST, date },
       { where: { id: booking_id } }

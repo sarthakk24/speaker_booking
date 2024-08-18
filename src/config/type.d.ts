@@ -10,7 +10,7 @@ declare namespace jsonwebtoken {
 interface user {
   id: string;
   email: string;
-  email_verification: boolean;
+  verified: boolean;
   role: string;
 }
 

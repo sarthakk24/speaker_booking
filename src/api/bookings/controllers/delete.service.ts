@@ -21,6 +21,13 @@ export const handleDeleteBooking = async (
       return;
     }
 
+    if (booking.dataValues.user_email != req.user?.email) {
+      throw {
+        statusCode: 401,
+        message: `${req.user?.email} are not authorized to update this booking`,
+      };
+    }
+
     const result = await Booking.destroy({
       where: { id: bookingId },
     });
