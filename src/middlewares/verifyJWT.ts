@@ -1,7 +1,7 @@
-import { Request, Response, NextFunction } from "express";
-import { JwtPayload, verify } from "jsonwebtoken";
-import config from "../config/config";
-import { JwtHeader } from "../models/schemas/middlewareSchema";
+import { Request, Response, NextFunction } from 'express';
+import { JwtPayload, verify } from 'jsonwebtoken';
+import config from '../config/config';
+import { JwtHeader } from '../models/schemas/middlewareSchema';
 // import { JwtHeader } from "jsonwebtoken";
 
 export const validateJwt = async (
@@ -14,11 +14,11 @@ export const validateJwt = async (
     if (!authorization) {
       return next({
         statusCode: 401,
-        message: "No JWT authorization Token available",
+        message: 'No JWT authorization Token available',
       });
     }
 
-    const authToken = authorization.split(" ")[1];
+    const authToken = authorization.split(' ')[1];
     const decoded = verify(authToken, config.jwtSecret);
     req.user = (<JwtPayload>decoded).id;
     next();

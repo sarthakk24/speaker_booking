@@ -16,6 +16,7 @@ const Booking = sequelize.define('Booking', {
       key: 'id',
     },
     onDelete: 'CASCADE',
+    field: 'speaker_id',
   },
   user_id: {
     type: DataTypes.UUID,
@@ -25,6 +26,7 @@ const Booking = sequelize.define('Booking', {
       key: 'id',
     },
     onDelete: 'CASCADE',
+    field: 'user_id',
   },
   speaker_email: {
     type: DataTypes.STRING,

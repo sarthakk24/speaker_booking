@@ -3,6 +3,35 @@ import Speaker from '../../../models/sql/speaker';
 import { Op } from 'sequelize';
 import Booking from '../../../models/sql/booking';
 
+interface BookingAttributes {
+  time_slot: string;
+  date: string;
+}
+
+interface SpeakerAttributes {
+  id: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  password: string;
+  email_verification: boolean;
+  price_per_session: number;
+  expertise: string;
+  _deleted: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+  Bookings: BookingAttributes[];
+}
+
+interface AvailableSlots {
+  [date: string]: string[];
+}
+
+interface AvailableSlotsForSpeaker {
+  speaker: SpeakerAttributes;
+  availableSlots: AvailableSlots;
+}
+
 export const handleGetBooking = async (
   req: Request,
   res: Response,
@@ -11,11 +40,15 @@ export const handleGetBooking = async (
   try {
     const today = new Date();
     today.setHours(0, 0, 0, 0); // Set to midnight for comparison
+
     const tomorrow = new Date(today);
     tomorrow.setDate(today.getDate() + 1);
 
+    const dayAfterTomorrow = new Date(today);
+    dayAfterTomorrow.setDate(today.getDate() + 2);
+
     // Define the time slots range
-    const timeSlots = [
+    const timeSlots: string[] = [
       '09:00',
       '10:00',
       '11:00',
@@ -33,7 +66,10 @@ export const handleGetBooking = async (
           attributes: ['time_slot', 'date'],
           where: {
             date: {
-              [Op.in]: [today, tomorrow],
+              [Op.in]: [
+                tomorrow.toISOString().split('T')[0],
+                dayAfterTomorrow.toISOString().split('T')[0],
+              ],
             },
           },
           required: false,
@@ -41,18 +77,23 @@ export const handleGetBooking = async (
       ],
     });
 
-    const availableSlotsForSpeakers = speakersWithBookedSlots.map(
-      (speaker: any) => {
+    const availableSlotsForSpeakers: AvailableSlotsForSpeaker[] =
+      speakersWithBookedSlots.map((speaker: any) => {
+        // Transform booked slots to be easier to work with
         const bookedSlots = speaker.Bookings.map((booking: any) => ({
-          time: booking.time_slot,
-          date: booking.date.toISOString().split('T')[0], // YYYY-MM-DD
+          time:
+            new Date(booking.time_slot)
+              .toISOString()
+              .split('T')[1]
+              .split(':')[0] + ':00', // Extract hour and minute
+          date: booking.date,
         }));
 
-        const availableSlots: { [key: string]: string[] } = {};
+        const availableSlots: AvailableSlots = {};
 
-        // Checking possible slots against booked slots
+        // Check all possible slots against booked slots
         timeSlots.forEach((time) => {
-          [today, tomorrow].forEach((date) => {
+          [tomorrow, dayAfterTomorrow].forEach((date) => {
             const dateStr = date.toISOString().split('T')[0];
             if (
               !bookedSlots.some(
@@ -71,14 +112,11 @@ export const handleGetBooking = async (
           speaker,
           availableSlots,
         };
-      }
-    );
-
-    console.log(availableSlotsForSpeakers);
+      });
 
     res.status(200).json({
       success: true,
-      message: 'Bookings retrieved successful',
+      message: 'Bookings retrieved successfully',
       availableSlotsForSpeakers,
     });
     next();

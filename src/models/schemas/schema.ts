@@ -73,19 +73,28 @@ export const yupOtpGenerateSchema = yup.object().shape({
 });
 
 // Booking validation schema
-export const yupNewAndUpdateBookingSchema = yup.object().shape({
+
+export const yupNewBookingSchema = yup.object().shape({
   speaker_email: yup
     .string()
-    .email('Email must be a valid email address.')
+    .email()
     .trim()
-    .required('Speaker email is required.'),
-  speaker_id: yupObjIdSchema
-    .shape({
-      id: yup.string().required('Speaker ID is required.'),
-    })
-    .required('Speaker ID is required.'),
-  date: yup.date().required('Date is required.'),
-  time_slot: yup.string().trim().required('Time slot is required.'),
+    .required('Please provide email id'),
+  speaker_id: yup
+    .string()
+    .trim()
+    .required('Speaker ID is required')
+    .matches(
+      /^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/,
+      'Not a Valid UUID'
+    ),
+  date: yup.date().required('Please provide a valid date'),
+  time_slot: yup.string().trim().required('Please provide a time slot'),
+});
+
+export const yupUpdateBookingSchema = yup.object().shape({
+  date: yup.date().required('Please provide a valid date'),
+  time_slot: yup.string().trim().required('Please provide a time slot'),
 });
 
 // Speaker validation schema

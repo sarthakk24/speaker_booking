@@ -37,10 +37,19 @@ const signinUser = async (email: string, password: string, role: string) => {
   }
   delete user['password'];
 
-  const jwtToken = sign({ id: user['id'] }, config.jwtSecret, {
-    issuer: 'Sarthak Sachdeva',
-    expiresIn: '72h',
-  });
+  const jwtToken = sign(
+    {
+      id: user['id'],
+      email: user['email'],
+      role,
+      verified: user['email_verification'],
+    },
+    config.jwtSecret,
+    {
+      issuer: 'Sarthak Sachdeva',
+      expiresIn: '72h',
+    }
+  );
 
   return {
     token: jwtToken,
