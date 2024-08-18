@@ -1,5 +1,11 @@
 import ical from 'ical-generator';
 
+export const subtractTime = (date: Date, hours: number, minutes: number) => {
+  const milliseconds = hours * 60 * 60 * 1000 + minutes * 60 * 1000;
+  const newDate = new Date(date.getTime() - milliseconds);
+  return newDate;
+};
+
 export const getIcalObjectInstance = (
   startTime: Date,
   endTime: Date,
@@ -13,8 +19,8 @@ export const getIcalObjectInstance = (
     name: 'Speaker Booking',
   });
   cal.createEvent({
-    start: startTime,
-    end: endTime,
+    start: subtractTime(startTime, 5, 30),
+    end: subtractTime(endTime, 5, 30),
     summary: summary,
     description: description,
     location: location,

@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import Booking from '../../../models/sql/booking';
 import User from '../../../models/sql/user';
-import { getIcalObjectInstance } from '../../../loaders/calendar';
+import { getIcalObjectInstance, subtractTime } from '../../../loaders/calendar';
 import { createNodemailerMail, sendEmail } from '../../../utils/mailer/ses';
 
 export const handleNewBooking = async (
@@ -34,16 +34,13 @@ export const handleNewBooking = async (
       };
     }
 
-    // Combine date and time to create a new Date object
     const [year, month, day] = date.split('-').map(Number);
     const [hours, minutes] = time_slot.split(':').map(Number);
 
-    // Create a Date object with IST offset (UTC + 5:30)
     const dateTimeIST = new Date(
       Date.UTC(year, month - 1, day, hours - 5, minutes - 30)
     );
 
-    // Adjust back to IST by adding 5 hours 30 minutes
     dateTimeIST.setHours(
       dateTimeIST.getHours() + 5,
       dateTimeIST.getMinutes() + 30
@@ -57,7 +54,6 @@ export const handleNewBooking = async (
       },
     });
 
-    // Check if booking already exists
     if (bookingExists) {
       throw {
         success: false,
@@ -91,21 +87,25 @@ export const handleNewBooking = async (
       <p>Dear ${organizer.name},</p>
       <p>Your booking has been confirmed. Here are the details:</p>
       <h2>${summary}</h2>
-      <p><strong>Date and Time:</strong> ${startTime} - ${endTime}</p>
+      <p><strong>Date and Time:</strong> ${subtractTime(
+        startTime,
+        5,
+        30
+      )} - ${subtractTime(endTime, 5, 30)}</p>
       <p><strong>Location: ${location}</strong> </p>
       <p>You can view more details or make changes to your booking by visiting
       <p>Thank you for choosing our service.</p>
     `;
 
-    // Plain text version of the email
     const emailText = `
       Dear ${organizer.name},
-  
       Your booking has been confirmed. Here are the details:
-  
       ${summary}
-  
-      Date and Time: ${startTime} - ${endTime}
+      Date and Time: ${subtractTime(startTime, 5, 30)} - ${subtractTime(
+      endTime,
+      5,
+      30
+    )}
 
       Location: ${location}
       
