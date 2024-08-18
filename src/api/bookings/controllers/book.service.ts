@@ -1,6 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
 import Booking from '../../../models/sql/booking';
 import User from '../../../models/sql/user';
+import { getIcalObjectInstance } from '../../../loaders/calendar';
+import { createNodemailerMail, sendEmail } from '../../../utils/mailer/ses';
 
 export const handleNewBooking = async (
   req: Request,
@@ -64,6 +66,73 @@ export const handleNewBooking = async (
       };
     }
 
+    const startTime = new Date(dateTimeIST);
+    const endTime = new Date(startTime.getTime() + 60 * 60 * 1000);
+    const organizer = {
+      name: 'Sarthak Sachdeva',
+      email: 'sarthak.sachdeva.73@gmail.com',
+    };
+    const location = 'Remote event';
+    const summary = 'Speaker booking confirmation';
+    const icalObect = getIcalObjectInstance(
+      startTime,
+      endTime,
+      summary,
+      'Speaker Booking confirmation',
+      'Remote event',
+      'https://www.google.co.in/',
+      organizer
+    );
+
+    const subject = `Booking Confirmation: ${summary}`;
+
+    const emailHTML = `
+      <h1>Booking Confirmation</h1>
+      <p>Dear ${organizer.name},</p>
+      <p>Your booking has been confirmed. Here are the details:</p>
+      <h2>${summary}</h2>
+      <p><strong>Date and Time:</strong> ${startTime} - ${endTime}</p>
+      <p><strong>Location: ${location}</strong> </p>
+      <p>You can view more details or make changes to your booking by visiting
+      <p>Thank you for choosing our service.</p>
+    `;
+
+    // Plain text version of the email
+    const emailText = `
+      Dear ${organizer.name},
+  
+      Your booking has been confirmed. Here are the details:
+  
+      ${summary}
+  
+      Date and Time: ${startTime} - ${endTime}
+
+      Location: ${location}
+      
+      Thank you for choosing our service.
+    `;
+
+    const speakerMail = createNodemailerMail(
+      emailHTML,
+      emailText,
+      subject,
+      speaker_email,
+      icalObect
+    );
+
+    const userMail = createNodemailerMail(
+      emailHTML,
+      emailText,
+      subject,
+      req.user.email,
+      icalObect
+    );
+
+    console.log(startTime, endTime);
+
+    await sendEmail(speakerMail);
+    await sendEmail(userMail);
+
     await Booking.create({
       user_id: id,
       user_email: email,
@@ -71,6 +140,7 @@ export const handleNewBooking = async (
       speaker_email,
       time_slot: dateTimeIST,
       date,
+      emails_sent: true,
     });
 
     res.status(200).json({
