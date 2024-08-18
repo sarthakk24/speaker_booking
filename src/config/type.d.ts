@@ -1,12 +1,21 @@
 declare namespace jsonwebtoken {
   interface JwtPayload {
     id?: string;
-    isAdmin?: boolean;
+    email?: string;
+    email_verification?: boolean;
+    role?: string;
   }
+}
+
+interface user {
+  id: string;
+  email: string;
+  email_verification: boolean;
+  role: string;
 }
 
 declare namespace Express {
   interface Request {
-    user?: string;
+    user?: user;
   }
 }

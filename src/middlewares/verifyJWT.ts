@@ -2,7 +2,6 @@ import { Request, Response, NextFunction } from 'express';
 import { JwtPayload, verify } from 'jsonwebtoken';
 import config from '../config/config';
 import { JwtHeader } from '../models/schemas/middlewareSchema';
-// import { JwtHeader } from "jsonwebtoken";
 
 export const validateJwt = async (
   req: Request,
@@ -20,7 +19,13 @@ export const validateJwt = async (
 
     const authToken = authorization.split(' ')[1];
     const decoded = verify(authToken, config.jwtSecret);
-    req.user = (<JwtPayload>decoded).id;
+    const details = {
+      id: (<JwtPayload>decoded).id,
+      email: (<JwtPayload>decoded).email,
+      email_verification: (<JwtPayload>decoded).email_verification,
+      role: (<JwtPayload>decoded).role,
+    };
+    req.user = details;
     next();
   } catch (err: any) {
     return next({
