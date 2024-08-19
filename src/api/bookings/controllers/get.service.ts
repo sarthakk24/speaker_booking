@@ -13,13 +13,9 @@ interface SpeakerAttributes {
   first_name: string;
   last_name: string;
   email: string;
-  password: string;
   email_verification: boolean;
   price_per_session: number;
   expertise: string;
-  _deleted: boolean;
-  createdAt: Date;
-  updatedAt: Date;
   Bookings: BookingAttributes[];
 }
 
@@ -38,8 +34,6 @@ export const handleGetBooking = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    console.log(req.user);
-
     const today = new Date();
     today.setHours(0, 0, 0, 0); // Set to midnight for comparison
 
@@ -61,6 +55,15 @@ export const handleGetBooking = async (
     ];
 
     const speakersWithBookedSlots = await Speaker.findAll({
+      attributes: [
+        'id',
+        'first_name',
+        'last_name',
+        'email',
+        'email_verification',
+        'price_per_session',
+        'expertise',
+      ], // Specify the attributes to include, excluding password, _deleted, updatedAt, and createdAt
       include: [
         {
           model: Booking,
@@ -109,7 +112,6 @@ export const handleGetBooking = async (
             }
           });
         });
-
         return {
           speaker,
           availableSlots,

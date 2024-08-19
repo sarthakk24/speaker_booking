@@ -35,7 +35,11 @@ const signinUser = async (email: string, password: string, role: string) => {
       message: 'Please check your password',
     };
   }
+  delete user['id'];
   delete user['password'];
+  delete user['_deleted'];
+  delete user['createdAt'];
+  delete user['updatedAt'];
 
   const jwtToken = sign(
     {

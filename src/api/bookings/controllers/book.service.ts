@@ -70,7 +70,7 @@ export const handleNewBooking = async (
     };
     const location = 'Remote event';
     const summary = 'Speaker booking confirmation';
-    const icalObect = getIcalObjectInstance(
+    const icalObject = getIcalObjectInstance(
       startTime,
       endTime,
       summary,
@@ -117,7 +117,7 @@ export const handleNewBooking = async (
       emailText,
       subject,
       speaker_email,
-      icalObect
+      icalObject
     );
 
     const userMail = createNodemailerMail(
@@ -125,10 +125,8 @@ export const handleNewBooking = async (
       emailText,
       subject,
       req.user.email,
-      icalObect
+      icalObject
     );
-
-    console.log(startTime, endTime);
 
     await sendEmail(speakerMail);
     await sendEmail(userMail);
