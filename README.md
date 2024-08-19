@@ -15,10 +15,12 @@
 - [Postgres](https://www.postgresql.org/)
 - [aws](https://aws.amazon.com/)
 - [redis](https://redis.io/)
+- [docker](https://www.docker.com/)
 
 ## AWS services
 
 - [RDS](https://aws.amazon.com/rds/)
+- [SES](https://aws.amazon.com/ses/)
 
 ## Database services
 
@@ -36,11 +38,11 @@ https://documenter.getpostman.com/view/11197946/2sA3s7i8Yh#intro
 
 Install dependencies
 
-## Please try to stay with Yarn
-
 ```
 $ yarn
 ```
+
+## Please try to stay with Yarn
 
 Build the server for deploying
 
