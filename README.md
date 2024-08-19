@@ -27,6 +27,7 @@
 - [Redis](https://redis.io/)
 
 ## Table chart
+![DBstructure drawio](https://github.com/user-attachments/assets/3871d91c-5fbb-4de5-8c29-8f76f7ddb484)
 
 ## Postman Documentaion
 
@@ -61,3 +62,19 @@ Start the server
 ```
 $ yarn start
 ```
+
+## Made By
+Name : Sarthak Sachdeva
+
+College Email : ss9661@srmist.edu.in
+
+Personal Email : sarthak.sachdeva.73@gmail.com
+
+Contact Number : +91 8178401732 , +91 8586905081
+
+[LinkedIn](https://www.linkedin.com/in/sarthakk24/)
+
+[Resume](https://drive.google.com/file/d/1rDKVlQciK5i0c4hJt4HgRpCSUxSvHQly/view?usp=sharing)
+
+
+
