@@ -18,7 +18,7 @@ const signupUser = async (
   if (userExist) {
     throw {
       statusCode: 400,
-      message: 'user wih same email already exists',
+      message: 'User with the same email already exists',
     };
   }
 
@@ -31,7 +31,14 @@ const signupUser = async (
     email,
     password: hash,
   });
-  return newUser;
+
+  const sanitizedUser = newUser.get({ plain: true });
+  delete sanitizedUser.password;
+  delete sanitizedUser.updatedAt;
+  delete sanitizedUser.createdAt;
+  delete sanitizedUser._deleted;
+
+  return sanitizedUser;
 };
 
 const signupSpeaker = async (
@@ -51,14 +58,14 @@ const signupSpeaker = async (
   if (speakerExist) {
     throw {
       statusCode: 400,
-      message: 'Speaker wih same email already exists',
+      message: 'Speaker with the same email already exists',
     };
   }
 
   const saltRounds = 10;
   const hash = await bcrypt.hash(password, saltRounds);
 
-  const newUser = await Speaker.create({
+  const newSpeaker = await Speaker.create({
     first_name,
     last_name,
     email,
@@ -66,7 +73,14 @@ const signupSpeaker = async (
     price_per_session,
     expertise,
   });
-  return newUser;
+
+  const sanitizedSpeaker = newSpeaker.get({ plain: true });
+  delete sanitizedSpeaker.password;
+  delete sanitizedSpeaker.updatedAt;
+  delete sanitizedSpeaker.createdAt;
+  delete sanitizedSpeaker._deleted;
+
+  return sanitizedSpeaker;
 };
 
 export const handleSignUpUser = async (
@@ -88,7 +102,7 @@ export const handleSignUpUser = async (
   } catch (err: any) {
     res.status(err.statusCode || 500).json({
       success: false,
-      message: err.message || '❌ Unknown Error Occurred !! ',
+      message: err.message || '❌ Unknown Error Occurred !!',
       data: err.data,
     });
   }
@@ -108,7 +122,7 @@ export const handleSignUpSpeaker = async (
       price_per_session,
       expertise,
     } = req.body;
-    const newUser = await signupSpeaker(
+    const newSpeaker = await signupSpeaker(
       first_name,
       last_name,
       email,
@@ -120,14 +134,14 @@ export const handleSignUpSpeaker = async (
     res.status(200).json({
       success: true,
       message: 'Thank you for signing up',
-      data: newUser,
+      data: newSpeaker,
     });
 
     next();
   } catch (err: any) {
     res.status(err.statusCode || 500).json({
       success: false,
-      message: err.message || '❌ Unknown Error Occurred !! ',
+      message: err.message || '❌ Unknown Error Occurred !!',
       data: err.data,
     });
   }
