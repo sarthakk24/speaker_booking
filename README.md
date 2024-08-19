@@ -1,4 +1,4 @@
-# Blog_backend
+# Speaker Booking Backend
 
 <div align="center">
   <img style="margin-right: 16px;" alt="nodejs" src="https://upload.wikimedia.org/wikipedia/commons/d/d9/Node.js_logo.svg" height="60" />
